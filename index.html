@@ -1,1 +1,66 @@
-Place your HTML here for the main page.
+<!DOCTYPE html>
+<html>
+ 
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<title>shop.html</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+</head>
+ 
+<body>
+<header>
+	<h1>Yuk's Shop</h1>
+</header>
+<nav id="menu">
+</nav>	
+<section id="content">
+</section>
+<section id="shop_list">
+</section>
+<script id="tmpl-menu" type="text/x-handlebars-template">
+<ul>
+	{{#categories}}
+		<li><a href="#" onclick="toProductList({{id}})">{{name}}</a></li>
+	{{/categories}}
+</ul>
+</script>
+<script id="tmpl-product_list" type="text/x-handlebars-template">
+<article>
+	<header> <a href="#" onclick="toHome()">Home</a> > {{category}} </header>
+	<ul class="products">
+	{{#product_list}}
+	<li><a href="#" onclick="toProductDetail({{id}})"><img src="images/{{img}}" />{{name}}</a><br/> ${{price}} <input type="button" onclick="addToCart('{{name}}','{{id}}','{{price}}')" value="Add"></li>
+	{{/product_list}}
+	</ul>
+</article>
+</script>
+<script id="tmpl-product_detail" type="text/x-handlebars-template">
+<article>
+	<header><a href="#" onclick="toHome()">Home</a> > <a href="#" onclick="toProductList({{category_id}})">{{category}}</a> > {{name}} </header>
+	<img class="product_pic" src="images/{{img}}" />
+	<section class="product_detail">
+	<p>{{name}}</p>
+	<p>${{price}}</p>
+	<input type="button" onclick="addToCart('{{name}}','{{id}}','{{price}}')" value="Add">
+	<h1>Description</h1>
+	<p>{{description}}</p>
+</section>
+</article>
+</script>
+<script id="tmpl-shop_list" type="text/x-handlebars-template">
+	<p>Shopping List ${{total}}</p>
+		<div>
+			<form action="">
+				<p>Shopping List ( Total: ${{total}} )</p>
+				<table class="shop_list_item">
+					{{#shop_list}}
+					<tr><td><a href="#" onclick="toProductDetail({{id}})">{{name}}</a></td><td><input type="text" value="{{quantity}}" id="quantity{{id}}"></td><td>@${{price}}</td></tr>
+					{{/shop_list}}
+				</table>
+				<input type="submit" value="Checkout">
+			</form>
+		</div>
+</script>
+<script type="text/javascript"src="handlebars-v2.0.0.js"></script>
+<script type="text/javascript"src="code.js"></script>
+</body>
