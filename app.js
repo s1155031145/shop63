@@ -1,21 +1,11 @@
-var http = require("http");
+'use strict';
+
+var express = require('express');
+
 var app = express();
 
-var options = {
-  dotfiles: 'ignore',
-  etag: false,
-  extensions: ['htm', 'html'],
-  index: true,
-  maxAge: '1d',
-  redirect: false,
-  setHeaders: function (res, path, stat) {
-    res.set('x-timestamp', Date.now())
-  }
-};
+app.use(express.static('public/'));
 
-
-
-
-app.use(express.static('public', options));
-
-app.listen(process.env.PORT || 8888);
+app.listen(3000, function () {
+    console.log('express-handlebars example server listening on: 3000');
+});
