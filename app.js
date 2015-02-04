@@ -1,9 +1,6 @@
-var express = require('express');
-
-var app = express();
-
-app.use(express.static('public/'));
-
-app.listen(8888, function () {
-    console.log('express-handlebars example server listening on: 3000');
-});
+var http = require("http");
+http.createServer(function(request, response) {
+response.writeHead(200, {"Content-Type": "text/plain"});
+response.write("Hello World");
+response.end();
+}).listen(process.env.PORT || 8888);
