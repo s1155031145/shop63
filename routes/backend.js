@@ -2,9 +2,9 @@ var express = require('express'),
 exphbs = require('express3-handlebars'),
 mysql = require('mysql'),
 connectionpool = mysql.createPool({
- host : 'aa19lq1y2ep9lxw.cfspg3qgxehi.ap-southeast-1.rds.amazonaws.com',
+ host : 'localhost',
  user : 'shop63-admin',
- password : '3176782f',
+ password : '4man520',
  database : 'shop63'
  }),
 bodyParser = require('body-parser'),
@@ -18,6 +18,12 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static('public/'));
 
 app.get('/', function (req, res) {
+ res.render('home', {
+        title: 'Home'
+    });
+});
+
+app.get('/home', function (req, res) {
  res.render('home', {
         title: 'Home'
     });
