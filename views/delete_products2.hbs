@@ -1,0 +1,13 @@
+<h1>{{> page/title}}</h1>
+
+{{> page/nav}}
+
+<form method="POST" action="/admin/delete_pro_result">
+Select Products: 
+<select name="pid" required>
+{{#products}}
+  <option value="{{pid}}">{{name}}</option>
+{{/products}}
+</select><br/>
+<input type="submit" value="Submit" />
+</form>

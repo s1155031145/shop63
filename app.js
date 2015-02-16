@@ -1,7 +1,19 @@
-var express = require('express');
+var express = require('express'),
+exphbs = require('express3-handlebars'),
+backEndRouter = require('./routes/backend.js');
 
 var app = express();
 
+app.engine('hbs', exphbs({
+	defaultLayout:'main', extname: '.hbs',
+	partialsDir: [
+        'shared/templates/',
+        'views/partials/'
+    ]	
+})); 
+app.set('view engine', 'hbs');
+
 app.use(express.static('public/'));
+app.use('/admin', backEndRouter);
 
 app.listen(process.env.PORT || 8888);

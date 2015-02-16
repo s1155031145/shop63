@@ -1,0 +1,14 @@
+<h1>{{> page/title}}</h1>
+
+{{> page/nav}}
+
+<form method="POST" action="/admin/change_cat_result">
+Select Categories: 
+<select name="catid">
+{{#categories}}
+  <option value="{{catid}}">{{name}}</option>
+{{/categories}}
+</select>
+ change to: <input type="text" name="new_name" required/><br/>
+<input type="submit" value="Submit" />
+</form>
