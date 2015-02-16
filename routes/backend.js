@@ -2,9 +2,9 @@ var express = require('express'),
 exphbs = require('express3-handlebars'),
 mysql = require('mysql'),
 connectionpool = mysql.createPool({
- host : 'localhost',
+ host : 'aa19lq1y2ep9lxw.cfspg3qgxehi.ap-southeast-1.rds.amazonaws.com',
  user : 'shop63-admin',
- password : '4man520',
+ password : '3176782f',
  database : 'shop63'
  }),
 bodyParser = require('body-parser'),
