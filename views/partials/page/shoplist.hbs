@@ -1,0 +1,30 @@
+<section id="shop_list">
+	<p>Shopping Cart ${{total}}</p>
+		<div>
+			{{#if shop_list}}
+			<form action="">
+				<p>Shopping Cart ( Total: ${{total}} )</p>
+				<table class="shop_list_item">
+					<tr>
+						<th> Item </th>
+						<th> Unit Price </th>
+						<th colspan="3"> Quantity </th>
+					</tr>
+					{{#shop_list}}
+					<tr>
+						<td><a href="/products?pid={{pid}}">{{name}}</a></td>
+						<td>@${{price}}</td>
+						<td><input type="text" value="{{quantity}}" id="quantity{{pid}}" /></td>
+						<td><button type="button" onclick="changeQTY('{{pid}}','1')">+</button></td>
+						<td><button type="button" onclick="changeQTY('{{pid}}','0')">-</button></td>
+					</tr>
+					{{/shop_list}}
+				</table>
+				<input type="submit" value="Checkout"/>
+			</form>
+			{{else}}
+			<p>Your Shopping Cart is EMPTY</p>
+			{{/if}}
+		</div>
+</section>
+		

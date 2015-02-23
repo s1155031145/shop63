@@ -1,0 +1,22 @@
+{{> page/title}}
+
+{{> page/nav}}
+
+<section id="content">
+<article>
+	<header><a href="/">Home</a> 
+	{{#product}}
+	> <a href="/?catid={{catid}}">{{cat_name}}</a> > {{pro_name}} </header>
+	<img class="product_pic" src="images/{{pid}}.jpg" />
+	<section class="product_detail">
+	<p>{{name}}</p>
+	<p>${{price}}</p>
+	<input type="button" onclick="addToCart('{{pid}}')" value="Add">
+	<h1>Description</h1>
+	<p>{{description}}</p>
+	</section>
+	{{/product}}
+</article>
+</section>
+
+{{> page/shoplist}}

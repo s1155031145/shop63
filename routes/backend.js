@@ -18,19 +18,13 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static('public/'));
 
 app.get('/', function (req, res) {
- res.render('home', {
-        title: 'Home'
-    });
-});
-
-app.get('/home', function (req, res) {
- res.render('home', {
+ res.render('admin/home', {
         title: 'Home'
     });
 });
 
 app.get('/add_categories', function (req, res) {
- res.render('add_categories', {
+ res.render('admin/add_categories', {
         title: 'Add Categories'
     });
 });
@@ -54,7 +48,7 @@ app.get('/change_categories', function(req,res){
             err:    err.code
         });
     } else {
-	 res.render('change_categories', { title: 'Change Categories', categories: rows});
+	 res.render('admin/change_categories', { title: 'Change Categories', categories: rows});
     }
     connection.release();
    });
@@ -81,7 +75,7 @@ app.get('/delete_categories', function(req,res){
             err:    err.code
         });
     } else {
-	 res.render('delete_categories', { title: 'Delete Categories', categories: rows});
+	 res.render('admin/delete_categories', { title: 'Delete Categories', categories: rows});
     }
     connection.release();
    });
@@ -108,7 +102,7 @@ app.get('/add_products', function(req,res){
             err:    err.code
         });
     } else {
-	 res.render('add_products', { title: 'Add Products', categories: rows});
+	 res.render('admin/add_products', { title: 'Add Products', categories: rows});
     }
     connection.release();
    });
@@ -135,7 +129,7 @@ app.get('/change_products', function(req,res){
             err:    err.code
         });
     } else {
-	 res.render('change_products', { title: 'Change Products', categories: rows});
+	 res.render('admin/change_products', { title: 'Change Products', categories: rows});
     }
     connection.release();
    });
@@ -162,7 +156,7 @@ app.get('/delete_products', function(req,res){
             err:    err.code
         });
     } else {
-	 res.render('delete_products', { title: 'Delete Products', categories: rows});
+	 res.render('admin/delete_products', { title: 'Delete Products', categories: rows});
     }
     connection.release();
    });
@@ -191,7 +185,7 @@ app.get('/change_products2', function(req,res){
         });
     } else {
 	 console.log(rows);
-	 res.render('change_products2', { title: 'Change Products', products: rows});
+	 res.render('admin/change_products2', { title: 'Change Products', products: rows});
     }
     connection.release();
    });
@@ -220,7 +214,7 @@ app.get('/change_products3', function(req,res){
             err:    err.code
         });
     } else {
-	 res.render('change_products3', { title: 'Change Products', categories: rows, product: product_value});
+	 res.render('admin/change_products3', { title: 'Change Products', categories: rows, product: product_value});
     }
     connection.release();
    });
@@ -248,7 +242,7 @@ app.get('/delete_products2', function(req,res){
             err:    err.code
         });
     } else {
-	 res.render('delete_products2', { title: 'Delete Products', products: rows});
+	 res.render('admin/delete_products2', { title: 'Delete Products', products: rows});
     }
     connection.release();
    });
@@ -276,7 +270,7 @@ app.post('/add_cat_result', function(req,res){
             err:    err.code
         });
     } else {
-	 res.render('result', { title: 'Add Categories', result: 'success!'});
+	 res.render('admin/result', { title: 'Add Categories', result: 'success!'});
     }
     connection.release();
    });
@@ -305,7 +299,7 @@ app.post('/change_cat_result', function(req,res){
             err:    err.code
         });
     } else {
-	 res.render('result', { title: 'Change Categories', result: 'success!'});
+	 res.render('admin/result', { title: 'Change Categories', result: 'success!'});
     }
     connection.release();
    });
@@ -333,7 +327,7 @@ app.post('/delete_cat_result', function(req,res){
             err:    err.code
         });
     } else {
-	 res.render('result', { title: 'Delete Categories', result: 'success!'});
+	 res.render('admin/result', { title: 'Delete Categories', result: 'success!'});
     }
     connection.release();
    });
@@ -401,7 +395,7 @@ app.post('/add_pro_result',function(req,res){
       });
      }
     }); 
-	res.render('result', { title: 'Add Products', result: 'Success.'});
+	res.render('admin/result', { title: 'Add Products', result: 'Success.'});
   }
 });
 
@@ -471,7 +465,7 @@ app.post('/change_pro_result',function(req,res){
       });
      }
     }); 
-	res.render('result', { title: 'Add Products', result: 'Success.'});
+	res.render('admin/result', { title: 'Add Products', result: 'Success.'});
 
 });
 
@@ -499,7 +493,7 @@ app.post('/delete_pro_result', function(req,res){
         if (err) console.error(err);
           console.log('successfully deleted /tmp/hello');
       });
-	  res.render('result', { title: 'Delete Products', result: 'success!'});
+	  res.render('admin/result', { title: 'Delete Products', result: 'success!'});
     }
     connection.release();
    });

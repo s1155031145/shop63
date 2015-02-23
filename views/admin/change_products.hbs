@@ -1,0 +1,13 @@
+<h1>{{> admin/title}}</h1>
+
+{{> admin/nav}}
+
+<form method="GET" action="/admin/change_products2">
+Select Categories: 
+<select name="categories" required>
+{{#categories}}
+  <option value="{{catid}}">{{name}}</option>
+{{/categories}}
+</select><br/>
+<input type="submit" value="Next" />
+</form>

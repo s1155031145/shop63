@@ -1,9 +1,7 @@
+<nav id="menu">
 <ul>
-    <li><a href="/admin/home">Home</a></li>
-    <li><a href="/admin/add_categories">Add Categories</a></li>
-    <li><a href="/admin/change_categories">Change Categories</a></li>
-    <li><a href="/admin/delete_categories">Delete Categories</a></li>
-    <li><a href="/admin/add_products">Add Products</a></li>
-    <li><a href="/admin/change_products">Change Products</a></li>
-    <li><a href="/admin/delete_products">Delete Products</a></li>
+	{{#categories}}
+		<li><a href="/?catid={{catid}}">{{name}}</a></li>
+	{{/categories}}
 </ul>
+</nav>	

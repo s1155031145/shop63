@@ -1,0 +1,17 @@
+<h1>{{> admin/title}}</h1>
+
+{{> admin/nav}}
+
+<form method="POST" action="/admin/add_pro_result" enctype="multipart/form-data">
+Categories: 
+<select name="catid" required>
+{{#categories}}
+  <option value="{{catid}}">{{name}}</option>
+{{/categories}}
+</select><br/>
+Product Name: <input type="text" name="name" required /><br/>
+Price: <input type="text" name="price" required pattern="^\d+(?:\.\d{1,2})?$" /><br/> 
+Description: <textarea name="desc" required ></textarea><br/>
+Photos: <input type="file" name="pics" required /><br/>
+<input type="submit" value="Submit" />
+</form>
