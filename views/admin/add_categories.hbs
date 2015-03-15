@@ -3,6 +3,6 @@
 {{> admin/nav}}
 
 <form method="POST" action="/admin/add_cat_result">
-Categories Name: <input type="text" name="name" required/><br/>
+Categories Name: <input type="text" name="name" required pattern="^[\w- ']+$" /><br/>
 <input type="submit" value="Submit" />
 </form>

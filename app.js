@@ -1,7 +1,8 @@
 var express = require('express'),
 exphbs = require('express3-handlebars'),
 backEndRouter = require('./routes/backend.js'),
-frontEndRouter = require('./routes/frontend.js');
+frontEndRouter = require('./routes/frontend.js'),
+authAPIRouter = require('./routes/Auth.api.js');
 
 var app = express();
 
@@ -15,6 +16,8 @@ app.engine('hbs', exphbs({
 app.set('view engine', 'hbs');
 
 app.use(express.static('public/'));
+
+app.use('/admin', authAPIRouter);
 app.use('/admin', backEndRouter);
 
 app.use('/', frontEndRouter);

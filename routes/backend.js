@@ -1,12 +1,8 @@
 var express = require('express'),
 exphbs = require('express3-handlebars'),
 mysql = require('mysql'),
-connectionpool = mysql.createPool({
- host : 'aa19lq1y2ep9lxw.cfspg3qgxehi.ap-southeast-1.rds.amazonaws.com',
- user : 'shop63-admin',
- password : '3176782f',
- database : 'shop63'
- }),
+config = require('../shop63-ierg4210.config.js'),
+connectionpool = mysql.createPool(config),
 bodyParser = require('body-parser'),
 multer  = require('multer'),
 fs = require('fs'),
