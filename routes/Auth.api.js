@@ -26,8 +26,7 @@ app.use(express.static('public/'));
 
 app.use(cookieParser()); 
 app.use(session({ 
- store: new RedisStore({ 
- 'host':'127.0.0.1', 'port':6379}),
+ name: 'shop63-admin',
  secret: '7mA2dHdjNWJqNEteutDAX9Ud', // by random.org
  resave: false, 
  saveUninitialized: false, 
