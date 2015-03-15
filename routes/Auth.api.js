@@ -69,14 +69,14 @@ app.post('/api/login', function (req, res) {
 		}
 		//console.log(result);
 		if (result[0] === undefined){
-			return req.xhr ? res.status(400).json({'loginError': 'Wrong username or password'}).end() : res.redirect('/admin/login');
+			return res.status(400).json({'loginError': 'Wrong username or password'}).end();
 		}
 		var submitedSaltedPassword = hmacPassword(req.body.password,result[0].salt);
 		//console.log(submitedSaltedPassword); //I made a mistake here and this is how to debug
 		//console.log(result.rows[0].saltedPassword); // Output in the right position.
 		// Didn't pass the credential.
 		if (result.rowCount === 0 || result[0].saltedPassword != submitedSaltedPassword) {
-			return req.xhr ? res.status(400).json({'loginError': 'Wrong username or password'}).end() : res.redirect('/admin/login');
+			return res.status(400).json({'loginError': 'Wrong username or password'}).end();
 		}
 		console.log('login success');
 			//The purpose for these parts of codes would be covered later.
