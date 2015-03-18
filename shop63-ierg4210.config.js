@@ -1,6 +1,6 @@
 module.exports = {
- host : 'localhost',
+ host : 'aa19lq1y2ep9lxw.cfspg3qgxehi.ap-southeast-1.rds.amazonaws.com',
  user : 'shop63-admin',
- password : '4man520',
+ password : '3176782f',
  database : 'shop63'
  };
