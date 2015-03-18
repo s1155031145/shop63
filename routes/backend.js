@@ -200,7 +200,7 @@ app.get('/change_products3', function(req,res){
   PriceRegExp = /^\d+(?:\.\d{1,2})?$/;
   DescRegExp = /^[\w- '()+,\r\n]+$/;
   if (!(product_value.cat_id == parseInt(product_value.cat_id)) || !NameRegExp.test(product_value.name) || !(product_value.pid == parseInt(product_value.pid)) || !PriceRegExp.test(product_value.price) || !DescRegExp.test(product_value.desc)){
-	return res.status(400).end('Invalid Input');
+	return res.status(400).end('Invalid Input: '+parseInt(product_value.cat_id)+' '+NameRegExp.test(product_value.name)+' '+parseInt(product_value.pid)+' '+PriceRegExp.test(product_value.price+' '+DescRegExp.test(product_value.desc));
   }
   console.log(product_value.cat_name);
   connectionpool.getConnection(function(err, connection) {
@@ -384,7 +384,7 @@ app.post('/add_pro_result',function(req,res){
   PriceRegExp = /^\d+(?:\.\d{1,2})?$/;
   DescRegExp = /^[\w- '()+,\r\n]+$/;
   if (!(req.body.catid == parseInt(req.body.catid)) || !NameRegExp.test(req.body.name) || !PriceRegExp.test(req.body.price) || !DescRegExp.test(req.body.desc)){
-	return res.status(400).end('Invalid Input');
+	return res.status(400).end('Invalid Input: '+parseInt(req.body.catid)+' '+NameRegExp.test(req.body.name)+' '+PriceRegExp.test(req.body.price)+' '+DescRegExp.test(req.body.desc));
   }
   var catid = req.body.catid;
   var pro_name = req.body.name;
@@ -455,7 +455,7 @@ app.post('/change_pro_result',function(req,res){
   PriceRegExp = /^\d+(?:\.\d{1,2})?$/;
   DescRegExp = /^[\w- '()+,\r\n]+$/;
   if (!(req.body.catid == parseInt(req.body.catid)) || !NameRegExp.test(req.body.name) || !(req.body.pid == parseInt(req.body.pid)) || !PriceRegExp.test(req.body.price) || !DescRegExp.test(req.body.desc)){
-	return res.status(400).end('Invalid Input');
+	return res.status(400).end('Invalid Input: '+parseInt(req.body.catid)+' '+NameRegExp.test(req.body.name)+' '+parseInt(req.body.pid)+' '+PriceRegExp.test(req.body.price)+' '+DescRegExp.test(req.body.desc);
   }
   var catid = req.body.catid,
   pid = req.body.pid,
