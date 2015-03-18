@@ -1,6 +1,7 @@
 <fieldset id="login">
 	<legend>IERG4210 Shop63 Login</legend>
 		<form method="POST" action="/admin/api/login">
+			<input type="hidden" name="_csrf" value="{{csrfToken}}">
 			<label for="username">Username: </label>
 			<div><input id="username" type="email" name="username" required  /></div>			
 			<label for="password">Password: </label>

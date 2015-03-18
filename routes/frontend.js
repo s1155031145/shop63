@@ -1,17 +1,24 @@
 var express = require('express'),
-exphbs = require('express3-handlebars'),
+exphbs = require('express-secure-handlebars'),
 mysql = require('mysql'),
 config = require('../shop63-ierg4210.config.js'),
 connectionpool = mysql.createPool(config),
 bodyParser = require('body-parser'),
-done=false;
+done=false,
+expressValidator = require('express-validator');
 
 var app = express.Router();
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static('public/'));
+app.use(expressValidator());
 
 app.get('/', function (req, res) {
+  req.checkQuery('catid', 'Invalid catid').optional().isInt();
+  req.sanitize('catid').toInt();
+	if (req.validationErrors()) {
+	return res.status(400).json({'Invalid Input': req.validationErrors()}).end();
+	}
   var catid = req.query.catid;
   connectionpool.getConnection(function(err, connection) {
   if (err) {
@@ -41,7 +48,7 @@ app.get('/', function (req, res) {
 				err:    err.code
 			});
 		} else {
-			connection.query('select c.catid, c.name AS cat_name, pid, p.name AS pro_name, price, description from categories AS c LEFT JOIN products AS p ON c.catid = p.catid where c.catid =\'' + catid + '\'', function(err2, result) {
+			connection.query('select c.catid, c.name AS cat_name, pid, p.name AS pro_name, price, description from categories AS c LEFT JOIN products AS p ON c.catid = p.catid where c.catid = ? ', [catid], function(err2, result) {
 				if (err2) {
 					console.error(err2);
 					res.statusCode = 500;
@@ -67,6 +74,11 @@ app.get('/', function (req, res) {
 });
 
 app.get('/product', function (req, res) {
+  req.checkQuery('pid', 'Invalid catid').notEmpty().isInt();
+  req.sanitize('pid').toInt();
+	if (req.validationErrors()) {
+	return res.status(400).json({'Invalid Input': req.validationErrors()}).end();
+	}
   var pid = req.query.pid;
   console.log('pid:'+pid);
   connectionpool.getConnection(function(err, connection) {
@@ -97,8 +109,8 @@ app.get('/product', function (req, res) {
 				err:    err.code
 			});
 		} else {
-			console.log('select p.catid, c.name AS cat_name, pid, p.name AS pro_name, price, description from products as p left join categories as c on p.catid = c.catid where p.pid =\'' + pid + '\'');
-			connection.query('select p.catid, c.name AS cat_name, pid, p.name AS pro_name, price, description from products as p left join categories as c on p.catid = c.catid where p.pid =\'' + pid + '\'', function(err2, result) {
+			//console.log('select p.catid, c.name AS cat_name, pid, p.name AS pro_name, price, description from products as p left join categories as c on p.catid = c.catid where p.pid =\'' + pid + '\'');
+			connection.query('select p.catid, c.name AS cat_name, pid, p.name AS pro_name, price, description from products as p left join categories as c on p.catid = c.catid where p.pid = ? ', [pid], function(err2, result) {
 				if (err2) {
 					console.error(err2);
 					res.statusCode = 500;
@@ -130,6 +142,11 @@ app.get('/getShopList', function (req, res) {
   json_shop_list = {
 	"total":"0"
   };
+  for (var i = 0; i < list.shop_list.length; i++){
+	  if (!(list.shop_list[i].pid == parseInt(list.shop_list[i].pid)) || !(list.shop_list[i].quantity == parseInt(list.shop_list[i].quantity))){
+		return res.status(400).end('Invalid Input');
+	  }
+  }
   if (list != null){
 	  if (list.shop_list.length > 0){
 		  for (var i = 0; i < list.shop_list.length; i++){

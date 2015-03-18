@@ -1,5 +1,5 @@
 var express = require('express'),
-exphbs = require('express3-handlebars'),
+exphbs = require('express-secure-handlebars'),
 backEndRouter = require('./routes/backend.js'),
 frontEndRouter = require('./routes/frontend.js'),
 authAPIRouter = require('./routes/Auth.api.js');
@@ -16,6 +16,13 @@ app.engine('hbs', exphbs({
 app.set('view engine', 'hbs');
 
 app.use(express.static('public/'));
+app.use(function(req, res, next){
+    res.header("Content-Security-Policy", "default-src 'self'");
+	res.header("X-Content-Security-Policy", "default-src 'self'");
+	res.header("X-WebKit-CSP", "default-src 'self'");
+    next();
+});
+
 
 app.use('/admin', authAPIRouter);
 app.use('/admin', backEndRouter);

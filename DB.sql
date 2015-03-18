@@ -28,4 +28,4 @@ PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 INSERT INTO `users` VALUES 
-(1,'cyy212','8U7stCTWLQA4uZWeDQYX8bxH','vUoaiAGqUBEHJxCFbkVkTr/o8DrY4onmtjnhwUNj91I=',1),(2,'abc123','CFFbdvxsDnDpcHbYQCLbbFhU','d5v4BnqK+9da7A0jp3nunJreRCg73p99+j/ytdbthvs=',0);
+(1,'yeuk20025@hotmail.com','8U7stCTWLQA4uZWeDQYX8bxH','vUoaiAGqUBEHJxCFbkVkTr/o8DrY4onmtjnhwUNj91I=',1),(2,'test@test.com','CFFbdvxsDnDpcHbYQCLbbFhU','d5v4BnqK+9da7A0jp3nunJreRCg73p99+j/ytdbthvs=',0);
