@@ -38,7 +38,7 @@ app.use(session({
  secret: '7mA2dHdjNWJqNEteutDAX9Ud', // by random.org
  resave: false, 
  saveUninitialized: false, 
- cookie: { path: '/admin', maxAge: 1000*60, 
+ cookie: { path: '/admin', maxAge: 1000*60*60*2, 
 httpOnly: true } 
 })); 
 
