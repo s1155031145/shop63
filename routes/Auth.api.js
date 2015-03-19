@@ -38,8 +38,8 @@ app.use(session({
  secret: '7mA2dHdjNWJqNEteutDAX9Ud', // by random.org
  resave: false, 
  saveUninitialized: false, 
- cookie: { path: '/admin', maxAge: 1000*60*60*24*3, 
-httpOnly: true } // expiring in 60s 
+ cookie: { path: '/admin', maxAge: 1000*60, 
+httpOnly: true } 
 })); 
 
 //app.use(csrf({ cookie: true }))
