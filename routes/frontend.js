@@ -13,6 +13,13 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static('public/'));
 app.use(expressValidator());
 
+app.use(function(req, res, next){
+    res.header("Content-Security-Policy", "default-src 'self'");
+	res.header("X-Content-Security-Policy", "default-src 'self'");
+	res.header("X-WebKit-CSP", "default-src 'self'");
+    next();
+});
+
 app.get('/', function (req, res) {
   req.checkQuery('catid', 'Invalid catid').optional().isInt();
   req.sanitize('catid').toInt();
