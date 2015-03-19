@@ -32,7 +32,7 @@ app.use(session({
  store: new RedisStore({ 
  'host':'ierg4210.oxmzfj.0001.apse1.cache.amazonaws.com', 'port':6379}),
 // 'host':'127.0.0.1', 'port':6379}),
- name: 'shop63-admin',
+ name: 'auth',
  secret: '7mA2dHdjNWJqNEteutDAX9Ud', // by random.org
  resave: false, 
  saveUninitialized: false, 
