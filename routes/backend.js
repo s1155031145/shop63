@@ -196,9 +196,9 @@ app.get('/change_products2', function(req,res){
 
 app.get('/change_products3', function(req,res){
   var product_value = JSON.parse(req.query.product);
-  NameRegExp = /^[\w- '()+,.]+$/;
+  NameRegExp = /^[\w- '()+,.!?:$%/]+$/;
   PriceRegExp = /^\d+(?:\.\d{1,2})?$/;
-  DescRegExp = /^[\w- '()+,.\r\n]+$/;
+  DescRegExp = /^[\w- '()+,.!?:$%/\r\n]+$/;
   if (!(product_value.cat_id == parseInt(product_value.cat_id)) || !NameRegExp.test(product_value.name) || !(product_value.pid == parseInt(product_value.pid)) || !PriceRegExp.test(product_value.price) || !DescRegExp.test(product_value.desc)){
 	return res.status(400).end('Invalid Input: '+parseInt(product_value.cat_id)+' '+NameRegExp.test(product_value.name)+' '+parseInt(product_value.pid)+' '+PriceRegExp.test(product_value.price)+' '+DescRegExp.test(product_value.desc));
   }
@@ -263,7 +263,7 @@ app.get('/delete_products2', function(req,res){
 });
 
 app.post('/add_cat_result', function(req,res){
-  NameRegExp = /^[\w- '()+,.]+$/;
+  NameRegExp = /^[\w- '()+,.!?:$%/]+$/;
   if (!NameRegExp.test(req.body.name)){
 	return res.status(400).end('Invalid Input');
   }
@@ -300,7 +300,7 @@ app.post('/change_cat_result', function(req,res){
 	if (req.validationErrors()) {
 	return res.status(400).json({'Invalid Input': req.validationErrors()}).end();
 	}
-  NameRegExp = /^[\w- '()+,.]+$/;
+  NameRegExp = /^[\w- '()+,.!?:$%/]+$/;
   if (!NameRegExp.test(req.body.new_name)){
 	return res.status(400).end('Invalid Input');
   }
@@ -380,9 +380,9 @@ onFileUploadComplete: function (file) {
 }));
 
 app.post('/add_pro_result',function(req,res){
-  NameRegExp = /^[\w- '()+,.]+$/;
+  NameRegExp = /^[\w- '()+,.!?:$%/]+$/;
   PriceRegExp = /^\d+(?:\.\d{1,2})?$/;
-  DescRegExp = /^[\w- '()+,.\r\n]+$/;
+  DescRegExp = /^[\w- '()+,.!?:$%/\r\n]+$/;
   if (!(req.body.catid == parseInt(req.body.catid)) || !NameRegExp.test(req.body.name) || !PriceRegExp.test(req.body.price) || !DescRegExp.test(req.body.desc)){
 	return res.status(400).end('Invalid Input: '+parseInt(req.body.catid)+' '+NameRegExp.test(req.body.name)+' '+PriceRegExp.test(req.body.price)+' '+DescRegExp.test(req.body.desc));
   }
@@ -451,9 +451,9 @@ onFileUploadComplete: function (file) {
 
 app.post('/change_pro_result',function(req,res){
   //console.log('Change Pro Result')
-  NameRegExp = /^[\w- '()+,.]+$/;
+  NameRegExp = /^[\w- '()+,.!?:$%/]+$/;
   PriceRegExp = /^\d+(?:\.\d{1,2})?$/;
-  DescRegExp = /^[\w- '()+,.\r\n]+$/;
+  DescRegExp = /^[\w- '()+,.!?:$%/\r\n]+$/;
   if (!(req.body.catid == parseInt(req.body.catid)) || !NameRegExp.test(req.body.name) || !(req.body.pid == parseInt(req.body.pid)) || !PriceRegExp.test(req.body.price) || !DescRegExp.test(req.body.desc)){
 	return res.status(400).end('Invalid Input: '+parseInt(req.body.catid)+' '+NameRegExp.test(req.body.name)+' '+parseInt(req.body.pid)+' '+PriceRegExp.test(req.body.price)+' '+DescRegExp.test(req.body.desc));
   }
