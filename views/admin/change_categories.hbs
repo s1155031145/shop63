@@ -3,6 +3,7 @@
 {{> admin/nav}}
 
 <form method="POST" action="/admin/change_cat_result">
+<input type="hidden" name="_csrf" value="{{csrfToken}}">
 Select Categories: 
 <select name="catid">
 {{#categories}}

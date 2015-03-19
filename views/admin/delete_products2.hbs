@@ -3,6 +3,7 @@
 {{> admin/nav}}
 
 <form method="POST" action="/admin/delete_pro_result">
+<input type="hidden" name="_csrf" value="{{csrfToken}}">
 Select Products: 
 <select name="pid" required>
 {{#products}}

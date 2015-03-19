@@ -3,6 +3,7 @@
 {{> admin/nav}}
 
 <form method="POST" action="/admin/delete_cat_result">
+<input type="hidden" name="_csrf" value="{{csrfToken}}">
 Delete Categories: 
 <select name="catid" required>
 {{#categories}}

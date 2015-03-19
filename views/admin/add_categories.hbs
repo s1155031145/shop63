@@ -3,6 +3,7 @@
 {{> admin/nav}}
 
 <form method="POST" action="/admin/add_cat_result">
+<input type="hidden" name="_csrf" value="{{csrfToken}}">
 Categories Name: <input type="text" name="name" required pattern="^[\w- '()+,.!?:$%/]+$" /><br/>
 <input type="submit" value="Submit" />
 </form>

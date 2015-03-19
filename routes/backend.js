@@ -21,7 +21,7 @@ app.get('/', function (req, res) {
 
 app.get('/add_categories', function (req, res) {
  res.render('admin/add_categories', {
-        title: 'Add Categories'
+        title: 'Add Categories', csrfToken: req.csrfToken()
     });
 });
 
@@ -44,7 +44,7 @@ app.get('/change_categories', function(req,res){
             err:    err.code
         });
     } else {
-	 res.render('admin/change_categories', { title: 'Change Categories', categories: rows});
+	 res.render('admin/change_categories', { title: 'Change Categories', categories: rows, csrfToken: req.csrfToken()});
     }
     connection.release();
    });
@@ -71,7 +71,7 @@ app.get('/delete_categories', function(req,res){
             err:    err.code
         });
     } else {
-	 res.render('admin/delete_categories', { title: 'Delete Categories', categories: rows});
+	 res.render('admin/delete_categories', { title: 'Delete Categories', categories: rows, csrfToken: req.csrfToken()});
     }
     connection.release();
    });
@@ -98,7 +98,7 @@ app.get('/add_products', function(req,res){
             err:    err.code
         });
     } else {
-	 res.render('admin/add_products', { title: 'Add Products', categories: rows});
+	 res.render('admin/add_products', { title: 'Add Products', categories: rows, csrfToken: req.csrfToken()});
     }
     connection.release();
    });
@@ -221,7 +221,7 @@ app.get('/change_products3', function(req,res){
             err:    err.code
         });
     } else {
-	 res.render('admin/change_products3', { title: 'Change Products', categories: rows, product: product_value});
+	 res.render('admin/change_products3', { title: 'Change Products', categories: rows, product: product_value, csrfToken: req.csrfToken()});
     }
     connection.release();
    });
@@ -254,7 +254,7 @@ app.get('/delete_products2', function(req,res){
             err:    err.code
         });
     } else {
-	 res.render('admin/delete_products2', { title: 'Delete Products', products: rows});
+	 res.render('admin/delete_products2', { title: 'Delete Products', products: rows, csrfToken: req.csrfToken()});
     }
     connection.release();
    });

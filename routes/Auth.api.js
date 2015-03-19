@@ -21,8 +21,6 @@ return hmac.digest('base64');
 }
 //console.log(hmacPassword(ÈVÈZ123456'));
 
-var csrfProtection = csrf({ cookie: true })
-
 var app = express.Router();
 
 app.use(bodyParser.urlencoded({extended:true}));
@@ -32,8 +30,8 @@ app.use(expressValidator());
 app.use(cookieParser()); 
 app.use(session({ 
  store: new RedisStore({ 
- 'host':'ierg4210.oxmzfj.0001.apse1.cache.amazonaws.com', 'port':6379}),
-// 'host':'127.0.0.1', 'port':6379}),
+// 'host':'ierg4210.oxmzfj.0001.apse1.cache.amazonaws.com', 'port':6379}),
+ 'host':'127.0.0.1', 'port':6379}),
  name: 'shop63-admin',
  secret: '7mA2dHdjNWJqNEteutDAX9Ud', // by random.org
  resave: false, 
@@ -42,7 +40,7 @@ app.use(session({
 httpOnly: true } 
 })); 
 
-//app.use(csrf({ cookie: true }))
+app.use(csrf({ cookie: true }));
 // error handler 
 app.use(function (err, req, res, next) {
   if (err.code !== 'EBADCSRFTOKEN') return next(err)
@@ -50,11 +48,11 @@ app.use(function (err, req, res, next) {
   // handle CSRF token errors here 
   res.status(403)
   res.send('form tampered with')
-})
+});
 
 //console.log('login:A');
 
-app.get('/login', csrfProtection, function (req, res) {
+app.get('/login', function (req, res) {
 	// TODO: render login page
 	//console.log('login:B');
 	req.session.destroy();

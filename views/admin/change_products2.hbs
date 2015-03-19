@@ -3,6 +3,7 @@
 {{> admin/nav}}
 
 <form id="change_products2_form" method="GET" action="/admin/change_products3">
+<input type="hidden" name="_csrf" value="{{csrfToken}}">
 Select Products: 
 <select name="product" required>
 {{#products}}

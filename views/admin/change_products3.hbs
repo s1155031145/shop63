@@ -2,8 +2,7 @@
 
 {{> admin/nav}}
 
-<form method="POST" action="/admin/change_pro_result" enctype="multipart/form-data">
-
+<form method="POST" action="/admin/change_pro_result?_csrf={{csrfToken}}" enctype="multipart/form-data">
 Categories: 
 <select name="catid">
 {{#categories}}
