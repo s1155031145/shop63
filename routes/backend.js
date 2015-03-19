@@ -495,7 +495,7 @@ app.post('/change_pro_result',function(req,res){
        } else {
 	     fs.exists('./public/images/new.jpg', function(exists) {
            if (exists) {
-             fs.unlinkSync('./public/images/'+pid+'.jpg');
+             //fs.unlinkSync('./public/images/'+pid+'.jpg');
 	         fs.rename('./public/images/new.jpg', './public/images/'+pid+'.jpg', function (err) {
 		       if (err) console.error(err);
 			     console.log('renamed complete');
