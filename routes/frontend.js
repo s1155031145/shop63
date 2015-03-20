@@ -5,7 +5,9 @@ config = require('../shop63-ierg4210.config.js'),
 connectionpool = mysql.createPool(config),
 bodyParser = require('body-parser'),
 done=false,
-expressValidator = require('express-validator');
+expressValidator = require('express-validator'),
+cookieParser = require('cookie-parser'),
+csrf = require('csurf');
 
 var app = express.Router();
 
@@ -14,10 +16,22 @@ app.use(express.static('public/'));
 app.use(expressValidator());
 
 app.use(function(req, res, next){
-    res.header("Content-Security-Policy", "default-src 'self'");
-	res.header("X-Content-Security-Policy", "default-src 'self'");
-	res.header("X-WebKit-CSP", "default-src 'self'");
+    res.header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'");
+	res.header("X-Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'");
+	res.header("X-WebKit-CSP", "default-src 'self'; script-src 'self' 'unsafe-inline'");
     next();
+});
+
+app.use(cookieParser()); 
+
+app.use(csrf({ cookie: true }));
+// error handler 
+app.use(function (err, req, res, next) {
+  if (err.code !== 'EBADCSRFTOKEN') return next(err)
+ 
+  // handle CSRF token errors here 
+  res.status(403)
+  res.send('form tampered with')
 });
 
 app.get('/', function (req, res) {
@@ -64,14 +78,15 @@ app.get('/', function (req, res) {
 						err:    err2.code
 					});
 				} else {
-					res.render('home', { title: 'Home', categories: rows, products: result, category: result[0].cat_name});
+					console.log('csrf: '+req.csrfToken());
+					res.render('home', { title: 'Home', categories: rows, products: result, category: result[0].cat_name, csrfToken: req.csrfToken()});
 				}
 				connection.release();
 		    });
 		}
 		});
 	  } else {
-		res.render('home', { title: 'Home', categories: rows});
+		res.render('home', { title: 'Home', categories: rows, csrfToken: req.csrfToken()});
 	  }
     }
     connection.release();
@@ -127,14 +142,14 @@ app.get('/product', function (req, res) {
 					});
 				} else {
 					console.log(result);
-					res.render('product', { title: 'Product', categories: rows, product: result});
+					res.render('product', { title: 'Product', categories: rows, product: result, csrfToken: req.csrfToken()});
 				}
 				connection.release();
 		    });
 		}
 		});
 	  } else {
-		res.render('product', { title: 'Product', categories: rows});
+		res.render('product', { title: 'Product', categories: rows, csrfToken: req.csrfToken()});
 	  }
     }
     connection.release();

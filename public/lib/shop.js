@@ -22,20 +22,15 @@ function addToCart(pid){
 }
 
 function refreshShopList(){
-	var url = 'getShopList?list='+localStorage.getItem('list');
-	var xmlhttp;
-	if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
-		xmlhttp=new XMLHttpRequest();
-	} else {// code for IE6, IE5
-		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	xmlhttp.onreadystatechange=function(){
-		if (xmlhttp.readyState==4 && xmlhttp.status==200){
-			document.getElementById('shop_list').innerHTML = xmlhttp.responseText;
+	var xhr = window.XMLHttpRequest? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");	
+	var url = 'getShopList?list='+localStorage.getItem('list');	
+	xhr.onreadystatechange=function(){
+		if (xhr.readyState==4 && xhr.status==200){
+			document.getElementById('shop_list').innerHTML = xhr.responseText;
 		}
 	}
-	xmlhttp.open("GET",url,true);
-	xmlhttp.send();
+	xhr.open("GET",url,true);
+	xhr.send(null);
 }
 
 function changeQTY(pid,flag){

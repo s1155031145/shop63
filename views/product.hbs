@@ -6,7 +6,7 @@
 <article>
 	<header><a href="/">Home</a> 
 	{{#product}}
-	> <a href="/?catid={{catid}}">{{cat_name}}</a> > {{pro_name}} </header>
+	> <a href="/?catid={{catid}}&_csrf={{csrfToken}}">{{cat_name}}</a> > {{pro_name}} </header>
 	<img class="product_pic" src="images/{{pid}}.jpg" />
 	<section class="product_detail">
 	<p>{{pro_name}}</p>

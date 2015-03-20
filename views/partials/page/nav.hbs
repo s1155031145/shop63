@@ -1,7 +1,7 @@
 <nav id="menu">
 <ul>
-	{{#categories}}
-		<li><a href="/?catid={{catid}}">{{name}}</a></li>
-	{{/categories}}
+	{{#each categories}}
+		<li><a href="/?catid={{catid}}&_csrf={{../csrfToken}}">{{name}}</a></li>
+	{{/each}}
 </ul>
 </nav>	

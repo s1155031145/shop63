@@ -1,14 +1,13 @@
 {{> page/title}}
 
 {{> page/nav}}
-
 <section id="content">
 <article>
 	<header> <a href="/">Home</a> {{#if category}} > {{category}} {{/if}}</header>
 	<ul class="products">
 	{{#products}}
 	<li>
-		<a href="/product?pid={{pid}}">
+		<a href="/product?pid={{pid}}&_csrf={{../csrfToken}}">
 			<img src="images/{{pid}}.jpg" />
 			{{pro_name}}
 		</a>
