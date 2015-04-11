@@ -422,9 +422,7 @@ app.get('/checkout/thankyou', function (req, res) {
 						});
 					}
 				});
-				
 				res.redirect('../finish?paymentId=' + paymentId);
-				res.end();
 			} else {
 				console.log("state = " + pament.state);
 				
