@@ -1,0 +1,13 @@
+{{> page/title}}
+
+<fieldset id="login">
+	<legend>IERG4210 Shop63 Login</legend>
+		<form method="POST" action="/account/api/login{{checkout}}">
+			<input type="hidden" name="_csrf" value="{{csrfToken}}">
+			<label for="username">Username: </label>
+			<div><input id="username" type="email" name="username" required  /></div>			
+			<label for="password">Password: </label>
+			<div><input id="password" type="password" name="password" required maxlength="512" pattern="^[\x20-\x7E]{6,512}$" title="Invalid Password" /></div>
+			<input type="submit" value="Submit" />
+		</form>
+</fieldset>

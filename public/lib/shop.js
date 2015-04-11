@@ -22,8 +22,11 @@ function addToCart(pid){
 }
 
 function refreshShopList(){
+	if (localStorage.getItem('list') == null)
+		localStorage.setItem('list', JSON.stringify({"shop_list": []}));
 	var xhr = window.XMLHttpRequest? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");	
 	var url = 'getShopList?list='+localStorage.getItem('list');	
+	console.log(url);
 	xhr.onreadystatechange=function(){
 		if (xhr.readyState==4 && xhr.status==200){
 			document.getElementById('shop_list').innerHTML = xhr.responseText;

@@ -2,9 +2,9 @@
 	<p>Shopping Cart ${{total}}</p>
 		<div>
 			{{#if shop_list}}
-			<form action="">
+			<form method="GET" action="/checkout">
 				<input type="hidden" name="_csrf" value="{{csrfToken}}">
-				<p>Shopping Cart ( Total: ${{total}} )</p>
+				<p>Shopping Cart ( Total: ${{total}} )</p><input type="hidden" name="total" value="{{total}}" />
 				<table class="shop_list_item">
 					<tr>
 						<th> Item </th>
@@ -13,9 +13,9 @@
 					</tr>
 					{{#shop_list}}
 					<tr>
-						<td><a href="/product?pid={{pid}}">{{name}}</a></td>
-						<td>@${{price}}</td>
-						<td><input type="text" value="{{quantity}}" id="quantity{{pid}}" /></td>
+						<td><a href="/product?pid={{pid}}">{{name}}</a><input type="hidden" name="pid[]" value="{{pid}}" /><input type="hidden" name="pname[]" value="{{name}}" /></td>
+						<td>@${{price}}<input type="hidden" name="price[]" value="{{price}}" /></td>
+						<td><input type="text" value="{{quantity}}" name="quantity[]" id="quantity{{pid}}" /></td>
 						<td><button type="button" onclick="changeQTY('{{pid}}','1')">+</button></td>
 						<td><button type="button" onclick="changeQTY('{{pid}}','0')">-</button></td>
 					</tr>

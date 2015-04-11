@@ -422,7 +422,7 @@ app.post('/add_pro_result',function(req,res){
            });
 		   return;
        } else {
-	     fs.rename('./public/images/new.jpg', './public/images/'+rows[0].pid.toString()+'.jpg', function (err) {
+	     fs.rename('./public/images/new.jpg', './public/images/PID-'+rows[0].pid.toString()+'.jpg', function (err) {
 		   if (err) throw err;
 			console.log('renamed complete');
 		   });
@@ -496,7 +496,7 @@ app.post('/change_pro_result',function(req,res){
 	     fs.exists('./public/images/new.jpg', function(exists) {
            if (exists) {
              //fs.unlinkSync('./public/images/'+pid+'.jpg');
-	         fs.rename('./public/images/new.jpg', './public/images/'+pid+'.jpg', function (err) {
+	         fs.rename('./public/images/new.jpg', './public/images/PID-'+pid+'.jpg', function (err) {
 		       if (err) console.error(err);
 			     console.log('renamed complete');
 		     });

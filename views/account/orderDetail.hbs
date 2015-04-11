@@ -1,0 +1,27 @@
+{{> page/title}}
+
+{{> page/nav}}
+<section id="content">
+<article>
+	<p>Payment ID: {{paymentid}}</p>
+	<p>Total: {{total}}</p>
+	<table>
+		<tr>
+			<th>Product Image</th>
+			<th>Name</th>
+			<th>Price</th>
+			<th>Quantity</th>
+		</tr>
+		{{#items}}
+		<tr>
+			<td><img class="orderDetailImg" src="images/{{sku}}.jpg"/></td>
+			<td>{{name}}</td>
+			<td>{{price}}</td>
+			<td>{{quantity}}</td>
+		</tr>
+		{{/items}}
+	</table>
+</article>
+</section>
+
+{{> page/shoplist}}

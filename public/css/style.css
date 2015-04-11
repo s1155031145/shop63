@@ -1,5 +1,10 @@
   *,body{background:#FFF;}
   
+  header a {
+    color: #000000;
+    text-decoration: none;
+  }
+  
   ul li{margin:0 0 0 -30px;list-style-type: none;}
   ul.dot li{margin:0 0 0 0;list-style-type: disc;}
   
@@ -32,3 +37,5 @@
   
   img.product_pic{width:450px;float:left;margin:5px;}
   article section.product_detail{position:relative;overflow:hidden;}
+  
+  img.orderDetailImg{width:200px;}

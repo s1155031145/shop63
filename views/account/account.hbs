@@ -1,0 +1,23 @@
+{{> page/title}}
+
+{{> page/nav}}
+<section id="content">
+<article>
+	<table>
+		<tr>
+			<th>Payment ID</th>
+			<th>State</th>
+			<th>Created Date</th>
+		</tr>
+		{{#payments}}
+		<tr>
+			<td><a href="/account/orderDetail?paymentid={{paymentid}}">{{paymentid}}</a></td>
+			<td>{{state}}</td>
+			<td>{{dateCreated}}</td>
+		</tr>
+		{{/payments}}
+	</table>
+</article>
+</section>
+
+{{> page/shoplist}}
