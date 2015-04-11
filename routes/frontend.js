@@ -416,13 +416,12 @@ app.get('/checkout/thankyou', function (req, res) {
 									err:    err.code
 								});
 							} else {
-							res.render('admin/result', { title: 'Add Categories', result: 'success!'});
+								res.redirect('../finish?paymentId=' + paymentId);
 							}
 							connection.release();
 						});
 					}
 				});
-				res.redirect('../finish?paymentId=' + paymentId);
 			} else {
 				console.log("state = " + pament.state);
 				
