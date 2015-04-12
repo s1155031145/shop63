@@ -471,6 +471,11 @@ app.get('/checkout/error', function (req, res) {
 
 app.get('/error', function (req, res) {
 	var token = req.query.token;
+	var bar;
+	if (req.session && req.session.username != undefined)
+		bar = [{url: "/account", action: "Account"}, {url: "/account/logout", action: "Logout"}];
+	else
+		bar = [{url: "/account/login", action: "Login"}];
 	connectionpool.getConnection(function(err, connection) {
 		if (err) {
 			console.error('CONNECTION error: ',err);
