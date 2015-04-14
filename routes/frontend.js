@@ -65,7 +65,9 @@ app.use(session({
  resave: false, 
  saveUninitialized: false, 
  cookie: { path: '/', maxAge: 1000*60*60*2, 
-httpOnly: true, secure: true } 
+httpOnly: true 
+//, secure: true
+} 
 })); 
 
 var crypto = require('crypto');
@@ -78,7 +80,9 @@ return hmac.digest('base64');
 }
 //console.log(hmacPassword(бе123456'));
 
-app.use(csrf({ cookie: {httpOnly: true, secure: true } }));
+app.use(csrf({ cookie: {httpOnly: true
+//, secure: true 
+} }));
 // error handler 
 app.use(function (err, req, res, next) {
   if (err.code !== 'EBADCSRFTOKEN') return next(err)
