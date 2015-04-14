@@ -8,8 +8,7 @@ cookieParser = require('cookie-parser'),
 session = require('express-session'), 
 RedisStore = require('connect-redis')(session),
 expressValidator = require('express-validator'),
-csrf = require('csurf'),
-xFrameOptions = require('x-frame-options');
+csrf = require('csurf');
 // Reference: https://github.com/expressjs/session
 
 var crypto = require('crypto');
@@ -53,15 +52,6 @@ app.use(function (err, req, res, next) {
   res.send('form tampered with')
 });
 
-//app.use(function(req, res, next){
-//    res.header("Content-Security-Policy", "default-src 'self'");
-//	res.header("X-Content-Security-Policy", "default-src 'self'");
-//	res.header("X-WebKit-CSP", "default-src 'self'");
-//    next();
-//});
-
-
-app.use(xFrameOptions());
 //console.log('login:A');
 
 app.get('/login', function (req, res) {
