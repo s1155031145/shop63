@@ -43,8 +43,8 @@ httpOnly: true
 })); 
 
 app.use(csrf({ cookie: {httpOnly: true
-, secure: true
-//} }));
+//, secure: true
+} }));
 // error handler 
 app.use(function (err, req, res, next) {
   if (err.code !== 'EBADCSRFTOKEN') return next(err)
