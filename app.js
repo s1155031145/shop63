@@ -3,7 +3,8 @@ exphbs = require('express-secure-handlebars'),
 backEndRouter = require('./routes/backend.js'),
 frontEndRouter = require('./routes/frontend.js'),
 authAPIRouter = require('./routes/Auth.api.js'),
-xFrameOptions = require('x-frame-options');
+xFrameOptions = require('x-frame-options'),
+xssFilter = require('x-xss-protection');
 
 var app = express();
 
@@ -26,6 +27,7 @@ app.use(function(req, res, next){
 
 app.use(xFrameOptions());
 app.set('etag', 'strong');
+app.use(xssFilter());
 
 
 //app.use('/admin', function(req, res, next) {
