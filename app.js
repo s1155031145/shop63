@@ -5,7 +5,7 @@ frontEndRouter = require('./routes/frontend.js'),
 authAPIRouter = require('./routes/Auth.api.js'),
 //xFrameOptions = require('x-frame-options'),
 //xssFilter = require('x-xss-protection'),
-//sts = require('strict-transport-security'),
+sts = require('strict-transport-security'),
 helmet = require('helmet');
 
 var app = express();
