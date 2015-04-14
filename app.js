@@ -39,7 +39,8 @@ var globalSTS = sts.getSTS({"max-age":{days:30}});
 app.use(globalSTS);
 //app.use(helmet.hsts({ maxAge: 2592000000 }));
 
-app.use(helmet.hidePoweredBy());
+//app.use(helmet.hidePoweredBy());
+app.disable('x-powered-by');
 app.use(helmet.noSniff());
 
 
