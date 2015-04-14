@@ -4,7 +4,8 @@ backEndRouter = require('./routes/backend.js'),
 frontEndRouter = require('./routes/frontend.js'),
 authAPIRouter = require('./routes/Auth.api.js'),
 xFrameOptions = require('x-frame-options'),
-xssFilter = require('x-xss-protection');
+xssFilter = require('x-xss-protection'),
+sts = require('strict-transport-security');
 
 var app = express();
 
@@ -28,6 +29,9 @@ app.use(function(req, res, next){
 app.use(xFrameOptions());
 app.set('etag', 'strong');
 app.use(xssFilter());
+
+var globalSTS = sts.getSTS({"max-age":{days:30}});
+app.use(globalSTS);
 
 
 //app.use('/admin', function(req, res, next) {
