@@ -10,7 +10,8 @@ cookieParser = require('cookie-parser'),
 session = require('express-session'), 
 RedisStore = require('connect-redis')(session),
 csrf = require('csurf'),
-paypal = require('paypal-rest-sdk');
+paypal = require('paypal-rest-sdk'),
+xFrameOptions = require('x-frame-options');
 
 var app = express.Router();
 
@@ -54,6 +55,8 @@ app.use(function(req, res, next){
 	res.header("X-WebKit-CSP", "default-src 'self'; script-src 'self' 'unsafe-inline'");
     next();
 });
+
+app.use(xFrameOptions())
 
 app.use(cookieParser()); 
 app.use(session({ 

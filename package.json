@@ -46,6 +46,7 @@
     "fs": "0.0.2",
     "multer": "^0.1.7",
     "mysql": "^2.5.4",
-    "paypal-rest-sdk": "^1.5.2"
+    "paypal-rest-sdk": "^1.5.2",
+    "x-frame-options": "0.0.0"
   }
 }
