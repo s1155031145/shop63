@@ -35,9 +35,9 @@ app.set('etag', 'strong');
 //app.use(xssFilter());
 app.use(helmet.xssFilter());
 
-//var globalSTS = sts.getSTS({"max-age":{days:30}});
-//app.use(globalSTS);
-app.use(helmet.hsts({ maxAge: 2592000000 }));
+var globalSTS = sts.getSTS({"max-age":{days:30}});
+app.use(globalSTS);
+//app.use(helmet.hsts({ maxAge: 2592000000 }));
 
 app.use(helmet.hidePoweredBy());
 app.use(helmet.noSniff());
