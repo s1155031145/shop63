@@ -80,9 +80,7 @@ return hmac.digest('base64');
 }
 //console.log(hmacPassword(бе123456'));
 
-app.use(csrf({ cookie: {httpOnly: true
-//, secure: true 
-} }));
+app.use(csrf({ cookie: {httpOnly: true, secure: true } }));
 // error handler 
 app.use(function (err, req, res, next) {
   if (err.code !== 'EBADCSRFTOKEN') return next(err)
