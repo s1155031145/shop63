@@ -22,7 +22,7 @@ app.use(function(req, res, next){
     res.header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'");
 	res.header("X-Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'");
 	res.header("X-WebKit-CSP", "default-src 'self'; script-src 'self' 'unsafe-inline'");
-	res.setHeader('ETag', etag(body));
+	res.setHeader('ETag', etag(req.body));
     next();
 });
 
