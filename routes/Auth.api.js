@@ -37,10 +37,10 @@ app.use(session({
  resave: false, 
  saveUninitialized: false, 
  cookie: { path: '/admin', maxAge: 1000*60*60*2, 
-httpOnly: true } 
+httpOnly: true, secure: true } 
 })); 
 
-app.use(csrf({ cookie: true }));
+app.use(csrf({ cookie: {httpOnly: true, secure: true} }));
 // error handler 
 app.use(function (err, req, res, next) {
   if (err.code !== 'EBADCSRFTOKEN') return next(err)
