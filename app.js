@@ -17,9 +17,9 @@ app.set('view engine', 'hbs');
 
 app.use(express.static('public/'));
 app.use(function(req, res, next){
-    res.header("Content-Security-Policy", "default-src 'self'");
-	res.header("X-Content-Security-Policy", "default-src 'self'");
-	res.header("X-WebKit-CSP", "default-src 'self'");
+    res.header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'");
+	res.header("X-Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'");
+	res.header("X-WebKit-CSP", "default-src 'self'; script-src 'self' 'unsafe-inline'");
     next();
 });
 

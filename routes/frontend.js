@@ -49,14 +49,14 @@ app.use(express.static('public/'));
 app.use('/account', express.static('public/'));
 app.use(expressValidator());
 
-app.use(function(req, res, next){
-    res.header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'");
-	res.header("X-Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'");
-	res.header("X-WebKit-CSP", "default-src 'self'; script-src 'self' 'unsafe-inline'");
-    next();
-});
+//app.use(function(req, res, next){
+//    res.header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'");
+//	res.header("X-Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'");
+//	res.header("X-WebKit-CSP", "default-src 'self'; script-src 'self' 'unsafe-inline'");
+//    next();
+//});
 
-app.use(xFrameOptions())
+app.use(xFrameOptions());
 
 app.use(cookieParser()); 
 app.use(session({ 
