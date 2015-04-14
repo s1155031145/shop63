@@ -44,6 +44,7 @@
     "express-validator": "^2.8.0",
     "express3-handlebars": "^0.5.2",
     "fs": "0.0.2",
+    "helmet": "^0.7.1",
     "multer": "^0.1.7",
     "mysql": "^2.5.4",
     "paypal-rest-sdk": "^1.5.2",
