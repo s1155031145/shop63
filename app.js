@@ -3,8 +3,7 @@ exphbs = require('express-secure-handlebars'),
 backEndRouter = require('./routes/backend.js'),
 frontEndRouter = require('./routes/frontend.js'),
 authAPIRouter = require('./routes/Auth.api.js'),
-xFrameOptions = require('x-frame-options'),
-etag = require('etag');
+xFrameOptions = require('x-frame-options');
 
 var app = express();
 
@@ -22,7 +21,6 @@ app.use(function(req, res, next){
     res.header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'");
 	res.header("X-Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'");
 	res.header("X-WebKit-CSP", "default-src 'self'; script-src 'self' 'unsafe-inline'");
-	res.setHeader('ETag', etag(req.body));
     next();
 });
 
