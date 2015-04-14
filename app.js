@@ -25,6 +25,7 @@ app.use(function(req, res, next){
 });
 
 app.use(xFrameOptions());
+app.set('etag', 'strong');
 
 
 //app.use('/admin', function(req, res, next) {
