@@ -57,3 +57,11 @@ function changeQTY(pid,flag){
 	localStorage.setItem('list', JSON.stringify(list)); 
 	refreshShopList();
 }
+
+document.getElementById('changePWForm').onsubmit = function(e){
+	if (document.getElementById('newPW').value!=document.getElementById('newPW2').value){
+		alert('New password and Confrim new password are not equal');
+		return false;
+	}
+	return true;
+};

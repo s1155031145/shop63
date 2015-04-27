@@ -1,0 +1,18 @@
+{{> page/title}}
+
+{{> page/nav}}
+<section id="content">
+<article>
+	<form id="changePWForm" method="POST" action="/account/api/changePW">
+		<input type="hidden" name="_csrf" value="{{csrfToken}}">
+		<table>
+		<tr><td>Old password:</td><td><input type="password" id="oldPW" name="oldPW" required /></td></tr>
+		<tr><td>New password:</td><td><input type="password" id="newPW" name="newPW" required maxlength="512" pattern="^[\x20-\x7E]{6,512}$" title="Invalid Password" /></td></tr>
+		<tr><td>Confrim new password:</td><td><input type="password" id="newPW2" name="newPW2" required maxlength="512" pattern="^[\x20-\x7E]{6,512}$" title="Invalid Password" /></td></tr>
+		</table>
+		<input type="submit" value="submit"/>
+	</from>
+</article>
+</section>
+
+{{> page/shoplist}}

@@ -12,6 +12,15 @@ RedisStore = require('connect-redis')(session),
 csrf = require('csurf'),
 paypal = require('paypal-rest-sdk');
 
+// load aws sdk
+var aws = require('aws-sdk');
+
+// load aws config
+aws.config.loadFromPath('shop63-ierg4210-ses.config.json');
+
+// load AWS SES
+var ses = new aws.SES({apiVersion: '2010-12-01'});
+
 var app = express.Router();
 
 paypal.configure({
@@ -73,7 +82,8 @@ return hmac.digest('base64');
 }
 //console.log(hmacPassword(бе123456'));
 
-app.use(csrf({ cookie: {httpOnly: true, secure: true } }));
+app.use(csrf({ cookie: {httpOnly: true, secure: true 
+} }));
 // error handler 
 app.use(function (err, req, res, next) {
   if (err.code !== 'EBADCSRFTOKEN') return next(err)
@@ -569,9 +579,49 @@ app.post('/account/api/login/:action?', function (req, res) {
  });
 });
 
+app.get('/account/forgetPW',function(req,res){
+	res.render('account/forgetPW', { csrfToken: req.csrfToken() });
+});
+
+app.get('/account/finish',function(req,res){
+	req.session.destroy();
+	var bar = [{url: "/account/login", action: "Login"}];
+	connectionpool.getConnection(function(err, connection) {
+		if (err) {
+			console.error('CONNECTION error: ',err);
+			res.statusCode = 503;
+			res.send({
+				result: 'error',
+				err:    err.code
+			});
+		} else {
+			connection.query('select * from categories', function(err, rows) {
+				if (err) {
+					console.error(err);
+					res.statusCode = 500;
+					res.send({
+						result: 'error',
+						err:    err.code
+					});
+				} else {
+					res.render('account/finish', { title: 'ChangePW/finish', "bar": bar, categories: rows});
+					
+				}
+			});
+			connection.release();
+		}
+	});
+});
+
+app.use('/account',function(req,res,next){
+	if (req.session && req.session.username != undefined)
+		return next();
+	res.redirect('/account/login');
+	
+});
+
 app.get('/account', function(req,res){
-	if (!(req.session && req.session.username != undefined))
-		res.redirect('/account/login');
+	console.log('enter account');
 	var bar = [{url: "/account", action: "Account"}, {url: "/account/logout", action: "Logout"}];
 	connectionpool.getConnection(function(err, connection) {
 		if (err) {
@@ -612,9 +662,6 @@ app.get('/account', function(req,res){
 
 app.get('/account/orderDetail', function(req,res){
 	var paymentid = req.query.paymentid;
-	var bar;
-	if (!(req.session && req.session.username != undefined))
-		res.redirect('/account/login');
 	var bar = [{url: "/account", action: "Account"}, {url: "/account/logout", action: "Logout"}];
 	paypal.payment.get(paymentid, function(error, payment){
 		if (error) {
@@ -659,5 +706,114 @@ app.get('/account/orderDetail', function(req,res){
 		}
 	});
 });
+
+app.get('/account/changePW',function(req,res){
+	var bar = [{url: "/account", action: "Account"}, {url: "/account/logout", action: "Logout"}];
+	connectionpool.getConnection(function(err, connection) {
+		if (err) {
+			console.error('CONNECTION error: ',err);
+			res.statusCode = 503;
+			res.send({
+				result: 'error',
+				err:    err.code
+			});
+		} else {
+			connection.query('select * from categories', function(err, rows) {
+				if (err) {
+					console.error(err);
+					res.statusCode = 500;
+					res.send({
+						result: 'error',
+						err:    err.code
+					});
+				} else {
+					
+					res.render('account/changePW', { title: 'ChangePW', "bar": bar, categories: rows, csrfToken: req.csrfToken()});
+					
+				}
+			});
+			connection.release();
+		}
+	});
+});
+
+app.post('/account/api/changePW', function(req,res){
+  req.checkBody('oldPW', 'Invalid Password').isLength(6, 512).matches('^[\x20-\x7E]{6,512}$');
+  req.checkBody('newPW', 'Invalid Password').isLength(6, 512).matches('^[\x20-\x7E]{6,512}$');
+  req.checkBody('newPW2', 'Invalid Password').isLength(6, 512).matches('^[\x20-\x7E]{6,512}$');
+  if (req.validationErrors()||req.body.newPW!=req.body.newPW2) {
+	return res.status(400).json({'Invalid Input': req.validationErrors()}).end();
+  }
+  connectionpool.getConnection(function(err, connection) {
+  if (err) {
+      console.error('CONNECTION error: ',err);
+      res.statusCode = 503;
+      res.send({
+          result: 'error',
+          err:    err.code
+      });
+  } else {
+	connection.query('SELECT * FROM users WHERE username = ? LIMIT 1',
+					 [req.session.username],function (error, result) {
+		if (error) {
+			console.error(error);
+			return res.status(500).json({'dbError': 'check server log'}).end();
+		}
+		//console.log(result);
+		if (result[0] === undefined){
+			return res.status(400).json({'loginError': 'Wrong username or password'}).end();
+		}
+		var oldSaltedPassword = hmacPassword(req.body.oldPW,result[0].salt);
+		//console.log(submitedSaltedPassword); //I made a mistake here and this is how to debug
+		//console.log(result.rows[0].saltedPassword); // Output in the right position.
+		// Didn't pass the credential.
+		if (result.rowCount === 0 || result[0].saltedPassword != oldSaltedPassword) {
+			return res.status(400).json({'loginError': 'Wrong old password'}).end();
+		}
+		var newSaltedPassword = hmacPassword(req.body.newPW, result[0].salt);
+		connection.query('UPDATE users SET saltedPassword = ? WHERE username = ?',
+		                 [newSaltedPassword, req.session.username],function (error, result) {
+			if (error) {
+				console.error(error);
+				return res.status(500).json({'dbError': 'check server log'}).end();
+			}
+			res.redirect('/account/finish');
+		});
+	});
+  }
+ });
+})
+
+app.get('/test',function(req,res){
+	// send to list
+	var to = ['yek20025@hotmail.com']
+
+	// this must relate to a verified SES account
+	var from = 'test@shop63_ierg4210.com'
+
+
+	// this sends the email
+	// @todo - add HTML version
+	ses.sendEmail( { 
+		Source: from, 
+		Destination: { ToAddresses: to },
+		Message: {
+			Subject: {
+			Data: 'Testing mail'
+			},
+			Body: {
+				Text: {
+					Data: 'Testing',
+				}
+			}
+		}
+	}
+	, function(err, data) {
+		if(err) throw err
+		console.log('Email sent:');
+		console.log(data);
+	 });
+});
+
 
 module.exports = app;
