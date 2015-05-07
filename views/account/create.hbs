@@ -1,0 +1,15 @@
+{{> page/title}}
+
+<fieldset id="login">
+	<legend>IERG4210 Shop63 Create Account</legend>
+		<form method="POST" action="/account/api/create">
+			<input type="hidden" name="_csrf" value="{{csrfToken}}">
+			<label for="username">Email (username): </label>
+			<div><input id="username" type="email" name="username" required  /></div>		
+			<label for="username">Password: </label>
+			<div><input id="password" type="password" name="password" required  /></div>
+			<label for="username">Confirm Password: </label>
+			<div><input id="confirm_password" type="password" name="confirm_password" required  /></div>		
+			<input type="submit" value="Submit" />
+		</form>
+</fieldset>

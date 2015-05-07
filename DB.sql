@@ -41,3 +41,8 @@ CREATE INDEX i3 ON payments(state);
 
 INSERT INTO `users` VALUES 
 (1,'yeuk20025@hotmail.com','8U7stCTWLQA4uZWeDQYX8bxH','vUoaiAGqUBEHJxCFbkVkTr/o8DrY4onmtjnhwUNj91I=',1),(2,'test@test.com','CFFbdvxsDnDpcHbYQCLbbFhU','d5v4BnqK+9da7A0jp3nunJreRCg73p99+j/ytdbthvs=',0);
+
+CREATE TABLE email_token (
+token varchar(512) NOT NULL,
+action TEXT
+) ENGINE=INNODB;

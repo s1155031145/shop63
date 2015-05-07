@@ -12,14 +12,26 @@ RedisStore = require('connect-redis')(session),
 csrf = require('csurf'),
 paypal = require('paypal-rest-sdk');
 
-// load aws sdk
-var aws = require('aws-sdk');
+var randtoken = require('rand-token');
 
-// load aws config
-aws.config.loadFromPath('shop63-ierg4210-ses.config.json');
+var nodemailer = require('nodemailer');
 
-// load AWS SES
-var ses = new aws.SES({apiVersion: '2010-12-01'});
+// create reusable transporter object using SMTP transport
+var transporter = nodemailer.createTransport({
+    service: 'Yahoo',
+    auth: {
+        user: 'store63ierg4210@yahoo.com.hk',
+        pass: '3176782f'
+    }
+});
+
+/*var smtpTransport = nodemailer.createTransport("SMTP",{
+   service: "Yahoo",
+   auth: {
+       user: "store63ierg4210@yahoo.com.hk",
+       pass: "3176782f"
+   }
+});*/
 
 var app = express.Router();
 
@@ -35,10 +47,10 @@ var create_payment_json = {
 		"payment_method": "paypal"
 	},
 	"redirect_urls":{
-		//"return_url": "http://localhost:8888/checkout/thankyou",
-		//"cancel_url": "http://localhost:8888/checkout/error"
-		"return_url": "https://store63.ierg4210.org/checkout/thankyou",
-		"cancel_url": "https://store63.ierg4210.org/checkout/error"
+		"return_url": "http://localhost:8888/checkout/thankyou",
+		"cancel_url": "http://localhost:8888/checkout/error"
+		//"return_url": "https://store63.ierg4210.org/checkout/thankyou",
+		//"cancel_url": "https://store63.ierg4210.org/checkout/error"
 	},
 	"transactions": [{
 		"item_list": {
@@ -55,13 +67,16 @@ var create_payment_json = {
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static('public/'));
 app.use('/account', express.static('public/'));
+app.use('/account/changePW', express.static('public/'));
+app.use('/account/create', express.static('public/'));
+app.use('/account/forgetPW', express.static('public/'));
 app.use(expressValidator());
 
 app.use(cookieParser()); 
 app.use(session({ 
  store: new RedisStore({ 
- 'host':'ierg4210.oxmzfj.0001.apse1.cache.amazonaws.com', 'port':6379}),
-// 'host':'127.0.0.1', 'port':6379}),
+// 'host':'ierg4210.oxmzfj.0001.apse1.cache.amazonaws.com', 'port':6379}),
+ 'host':'127.0.0.1', 'port':6379}),
  name: 'account',
  secret: '7mA2dHdjNWJqNEteutDAX9Ud', // by random.org
  resave: false, 
@@ -82,7 +97,8 @@ return hmac.digest('base64');
 }
 //console.log(hmacPassword(бе123456'));
 
-app.use(csrf({ cookie: {httpOnly: true, secure: true 
+app.use(csrf({ cookie: {httpOnly: true
+//, secure: true 
 } }));
 // error handler 
 app.use(function (err, req, res, next) {
@@ -104,7 +120,7 @@ app.get('/', function (req, res) {
   if (req.session && req.session.username != undefined)
 	bar = [{url: "/account", action: "Account"}, {url: "/account/logout", action: "Logout"}];
   else
-	bar = [{url: "/account/login", action: "Login"}];
+	bar = [{url: "/account/login", action: "Sign in"}, {url: "/account/create", action: "Sign up"}];
   //console.log(bar);
   connectionpool.getConnection(function(err, connection) {
   if (err) {
@@ -171,7 +187,7 @@ app.get('/product', function (req, res) {
   if (req.session && req.session.username != undefined)
 	bar = [{url: "/account", action: "Account"}, {url: "/account/logout", action: "Logout"}];
   else
-	bar = [{url: "/account/login", action: "Login"}];
+	bar = [{url: "/account/login", action: "Sign in"}, {url: "/account/create", action: "Sign up"}];
   //console.log('pid:'+pid);
   connectionpool.getConnection(function(err, connection) {
   if (err) {
@@ -442,7 +458,7 @@ app.get('/finish', function (req, res) {
 	if (req.session && req.session.username != undefined)
 		bar = [{url: "/account", action: "Account"}, {url: "/account/logout", action: "Logout"}];
 	else
-		bar = [{url: "/account/login", action: "Login"}];
+		bar = [{url: "/account/login", action: "Sign in"}, {url: "/account/create", action: "Sign up"}];
 	connectionpool.getConnection(function(err, connection) {
 		if (err) {
 			console.error('CONNECTION error: ',err);
@@ -480,7 +496,7 @@ app.get('/error', function (req, res) {
 	if (req.session && req.session.username != undefined)
 		bar = [{url: "/account", action: "Account"}, {url: "/account/logout", action: "Logout"}];
 	else
-		bar = [{url: "/account/login", action: "Login"}];
+		bar = [{url: "/account/login", action: "Sign in"}, {url: "/account/create", action: "Sign up"}];
 	connectionpool.getConnection(function(err, connection) {
 		if (err) {
 			console.error('CONNECTION error: ',err);
@@ -583,9 +599,114 @@ app.get('/account/forgetPW',function(req,res){
 	res.render('account/forgetPW', { csrfToken: req.csrfToken() });
 });
 
-app.get('/account/finish',function(req,res){
-	req.session.destroy();
-	var bar = [{url: "/account/login", action: "Login"}];
+app.post('/account/api/forgetPW',function(req,res){
+	var token = randtoken.generate(16);
+	var rand_pw = randtoken.generate(8);
+	
+	connectionpool.getConnection(function(err, connection) {
+		if (err) {
+			console.error('CONNECTION error: ',err);
+			res.statusCode = 503;
+			res.send({
+				result: 'error',
+				err:    err.code
+			});
+		} else {
+			connection.query('SELECT * FROM users WHERE username = ? LIMIT 1',
+					 [req.body.username],function (error, result) {
+				if (error) {
+					console.error(error);
+					return res.status(500).json({'dbError': 'check server log'}).end();
+				}
+				//console.log(result);
+				if (result[0] === undefined){
+					return res.status(400).json({'loginError': 'Wrong username or password'}).end();
+				}
+				var action = 'UPDATE users SET saltedPassword = \'' + hmacPassword(rand_pw,result[0].salt) + '\' WHERE username = \'' + req.body.username + '\'';
+				connection.query('INSERT INTO email_token(token, action) VALUES ("'+token+'", "'+action+'")', function(err, rows) {
+					if (err) {
+						console.error(err);
+						res.statusCode = 500;
+						res.send({
+							result: 'error',
+							err:    err.code
+						});
+					} else {
+						transporter.sendMail({
+						   from: "store63ierg4210@yahoo.com.hk", // sender address
+						   to: req.body.username, // comma separated list of receivers
+						   subject: "Forget Password of Store63", // Subject line
+						   html: '<p>Your new password is "'+rand_pw+'" </p><p>Please click link below to continuous your step.</p><a href=http://localhost:8888/account/forgetPW/continuous?token='+token+'>http://localhost:8888/account/forgetPW/continuous?token='+token+' </a>' 
+						   //html: '<p>Your new password is "'+rand_pw+'" </p><p>Please click link below to continuous your step.</p><a href=https://store63.ierg4210.org/account/forgetPW/continuous?token='+token+'>https://store63.ierg4210.org/account/forgetPW/continuous?token='+token+' </a>' 
+						}, function(error, response){
+						   if(error){
+							   console.log(error);
+						   }else{
+							    console.log("Message sent: " + response.message);
+								res.redirect('/account/forgetPW/next');
+						   }
+						});
+					}
+				});
+			});
+			connection.release();
+		}
+	});
+});
+
+app.get('/account/forgetPW/continuous',function(req,res){
+	var token = req.query.token;
+	connectionpool.getConnection(function(err, connection) {
+		if (err) {
+			console.error('CONNECTION error: ',err);
+			res.statusCode = 503;
+			res.send({
+				result: 'error',
+				err:    err.code
+			});
+		} else {
+			connection.query('SELECT action FROM email_token WHERE token = ? LIMIT 1',
+					 [token],function (error, result) {
+				if (error) {
+					console.error(error);
+					return res.status(500).json({'dbError': 'check server log'}).end();
+				}
+				//console.log(result);
+				if (result[0] === undefined){
+					return res.status(400).json({'loginError': 'Wrong token'}).end();
+				}
+				connection.query(result[0].action, function(err, rows) {
+					if (err) {
+						console.error(err);
+						res.statusCode = 500;
+						res.send({
+							result: 'error',
+							err:    err.code
+						});
+					} else {
+						connection.query('DELETE FROM email_token where token = ?',[token], function(err, rows) {
+							if (err) {
+								console.error(err);
+								res.statusCode = 500;
+								res.send({
+									result: 'error',
+									err:    err.code
+								});
+							} else {
+								res.redirect('/account/forgetPW/finish');
+							}
+						});
+					}
+				});
+			});
+			connection.release();
+		}
+	});
+});
+
+app.get('/account/forgetPW/next',function(req,res){
+	//req.session.destroy();
+	var bar = [{url: "/account/login", action: "Sign in"}, {url: "/account/create", action: "Sign up"}];
 	connectionpool.getConnection(function(err, connection) {
 		if (err) {
 			console.error('CONNECTION error: ',err);
@@ -604,7 +725,242 @@ app.get('/account/finish',function(req,res){
 						err:    err.code
 					});
 				} else {
-					res.render('account/finish', { title: 'ChangePW/finish', "bar": bar, categories: rows});
+					res.render('account/finish', { title: 'forgetPW/finish', "bar": bar, categories: rows, message: "Please check your email for the next step."});
+					
+				}
+			});
+			connection.release();
+		}
+	});
+});
+
+app.get('/account/forgetPW/finish',function(req,res){
+	//req.session.destroy();
+	var bar = [{url: "/account/login", action: "Sign in"}, {url: "/account/create", action: "Sign up"}];
+	connectionpool.getConnection(function(err, connection) {
+		if (err) {
+			console.error('CONNECTION error: ',err);
+			res.statusCode = 503;
+			res.send({
+				result: 'error',
+				err:    err.code
+			});
+		} else {
+			connection.query('select * from categories', function(err, rows) {
+				if (err) {
+					console.error(err);
+					res.statusCode = 500;
+					res.send({
+						result: 'error',
+						err:    err.code
+					});
+				} else {
+					res.render('account/finish', { title: 'forgetPW/finish', "bar": bar, categories: rows, message: "Your password is now changed. Please login and change to your new password immediately"});
+				}
+			});
+			connection.release();
+		}
+	});
+});
+
+app.get('/account/create',function(req,res){
+	res.render('account/create', { csrfToken: req.csrfToken() });
+});
+
+app.post('/account/api/create',function(req,res){
+	var token = randtoken.generate(16);
+	var rand_salt = randtoken.generate(24);
+	var username = req.body.username;
+	req.checkBody('password', 'Invalid Password').isLength(6, 512).matches('^[\x20-\x7E]{6,512}$');
+	req.checkBody('confirm_password', 'Invalid Password').isLength(6, 512).matches('^[\x20-\x7E]{6,512}$');
+	if (req.validationErrors()||req.body.password!=req.body.confirm_password) {
+		return res.status(400).json({'Invalid Input': req.validationErrors()}).end();
+	}
+	
+	var action = 'INSERT INTO users(username, salt, saltedPassword, admin) VALUES (\''+username+'\', \''+rand_salt+'\', \''+hmacPassword(req.body.password,rand_salt)+'\', 0) ';
+	
+	connectionpool.getConnection(function(err, connection) {
+		if (err) {
+			console.error('CONNECTION error: ',err);
+			res.statusCode = 503;
+			res.send({
+				result: 'error',
+				err:    err.code
+			});
+		} else {
+			connection.query('SELECT * FROM users WHERE username = ? LIMIT 1',
+					 [username],function (error, result) {
+				if (error) {
+					console.error(error);
+					return res.status(500).json({'dbError': 'check server log'}).end();
+				}
+				//console.log(result);
+				if (result[0] === undefined){
+					connection.query('INSERT INTO email_token(token, action) VALUES ("'+token+'", "'+action+'")', function(err, rows) {
+						if (err) {
+							console.error(err);
+							res.statusCode = 500;
+							res.send({
+								result: 'error',
+								err:    err.code
+							});
+						} else {
+							transporter.sendMail({
+							   from: "store63ierg4210@yahoo.com.hk", // sender address
+							   to: username, // comma separated list of receivers
+							   subject: "Sing up of Store63", // Subject line
+							   html: '<p>Your new account is created </p><p>Please click link below to activate your account.</p><a href=http://localhost:8888/account/create/continuous?token='+token+'>http://localhost:8888/account/create/continuous?token='+token+' </a>' 
+							   //html: '<p>Your new account is created </p><p>Please click link below to activate your account.</p><a href=https://store63.ierg4210.org/account/create/continuous?token='+token+'>https://store63.ierg4210.org/account/create/continuous?token='+token+' </a>' 
+							}, function(error, response){
+							   if(error){
+								   console.log(error);
+							   }else{
+									console.log("Message sent: " + response.message);
+									res.redirect('/account/create/next');
+							   }
+							});
+						}
+					});
+				} else {
+					return res.status(400).json({'signupError': 'Accout Created Bofore'}).end()
+				}
+			});
+			connection.release();
+		}
+	});
+});
+
+app.get('/account/create/next',function(req,res){
+	//req.session.destroy();
+	var bar = [{url: "/account/login", action: "Sign in"}, {url: "/account/create", action: "Sign up"}];
+	connectionpool.getConnection(function(err, connection) {
+		if (err) {
+			console.error('CONNECTION error: ',err);
+			res.statusCode = 503;
+			res.send({
+				result: 'error',
+				err:    err.code
+			});
+		} else {
+			connection.query('select * from categories', function(err, rows) {
+				if (err) {
+					console.error(err);
+					res.statusCode = 500;
+					res.send({
+						result: 'error',
+						err:    err.code
+					});
+				} else {
+					res.render('account/finish', { title: 'create/finish', "bar": bar, categories: rows, message: "Please check your email for the next step."});
+					
+				}
+			});
+			connection.release();
+		}
+	});
+});
+
+app.get('/account/create/continuous',function(req,res){
+	var token = req.query.token;
+	connectionpool.getConnection(function(err, connection) {
+		if (err) {
+			console.error('CONNECTION error: ',err);
+			res.statusCode = 503;
+			res.send({
+				result: 'error',
+				err:    err.code
+			});
+		} else {
+			connection.query('SELECT action FROM email_token WHERE token = ? LIMIT 1',
+					 [token],function (error, result) {
+				if (error) {
+					console.error(error);
+					return res.status(500).json({'dbError': 'check server log'}).end();
+				}
+				//console.log(result);
+				if (result[0] === undefined){
+					return res.status(400).json({'loginError': 'Wrong token'}).end();
+				}
+				connection.query(result[0].action, function(err, rows) {
+					if (err) {
+						console.error(err);
+						res.statusCode = 500;
+						res.send({
+							result: 'error',
+							err:    err.code
+						});
+					} else {
+						connection.query('DELETE FROM email_token where token = ?',[token], function(err, rows) {
+							if (err) {
+								console.error(err);
+								res.statusCode = 500;
+								res.send({
+									result: 'error',
+									err:    err.code
+								});
+							} else {
+								res.redirect('/account/create/finish');
+							}
+						});
+					}
+				});
+			});
+			connection.release();
+		}
+	});
+});
+
+app.get('/account/create/finish',function(req,res){
+	//req.session.destroy();
+	var bar = [{url: "/account/login", action: "Sign in"}, {url: "/account/create", action: "Sign up"}];
+	connectionpool.getConnection(function(err, connection) {
+		if (err) {
+			console.error('CONNECTION error: ',err);
+			res.statusCode = 503;
+			res.send({
+				result: 'error',
+				err:    err.code
+			});
+		} else {
+			connection.query('select * from categories', function(err, rows) {
+				if (err) {
+					console.error(err);
+					res.statusCode = 500;
+					res.send({
+						result: 'error',
+						err:    err.code
+					});
+				} else {
+					res.render('account/finish', { title: 'create/finish', "bar": bar, categories: rows, message: "Your account is now activated. You can use your account to sign in now!"});
+				}
+			});
+			connection.release();
+		}
+	});
+});
+
+app.get('/account/changePW/finish',function(req,res){
+	req.session.destroy();
+	var bar = [{url: "/account/login", action: "Sign in"}, {url: "/account/create", action: "Sign up"}];
+	connectionpool.getConnection(function(err, connection) {
+		if (err) {
+			console.error('CONNECTION error: ',err);
+			res.statusCode = 503;
+			res.send({
+				result: 'error',
+				err:    err.code
+			});
+		} else {
+			connection.query('select * from categories', function(err, rows) {
+				if (err) {
+					console.error(err);
+					res.statusCode = 500;
+					res.send({
+						result: 'error',
+						err:    err.code
+					});
+				} else {
+					res.render('account/finish', { title: 'ChangePW/finish', "bar": bar, categories: rows, message: "Finished changing password and logged out."});
 					
 				}
 			});
@@ -777,7 +1133,7 @@ app.post('/account/api/changePW', function(req,res){
 				console.error(error);
 				return res.status(500).json({'dbError': 'check server log'}).end();
 			}
-			res.redirect('/account/finish');
+			res.redirect('/account/changePW/finish');
 		});
 	});
   }
@@ -785,34 +1141,18 @@ app.post('/account/api/changePW', function(req,res){
 })
 
 app.get('/test',function(req,res){
-	// send to list
-	var to = ['yek20025@hotmail.com']
-
-	// this must relate to a verified SES account
-	var from = 'test@shop63_ierg4210.com'
-
-
-	// this sends the email
-	// @todo - add HTML version
-	ses.sendEmail( { 
-		Source: from, 
-		Destination: { ToAddresses: to },
-		Message: {
-			Subject: {
-			Data: 'Testing mail'
-			},
-			Body: {
-				Text: {
-					Data: 'Testing',
-				}
-			}
-		}
-	}
-	, function(err, data) {
-		if(err) throw err
-		console.log('Email sent:');
-		console.log(data);
-	 });
+transporter.sendMail({
+   from: "Store63 <store63ierg4210@yahoo.com.hk>", // sender address
+   to: "yeuk20025@hotmail.com", // comma separated list of receivers
+   subject: "Testing", // Subject line
+   text: "Hello world" // plaintext body
+}, function(error, response){
+   if(error){
+       console.log(error);
+   }else{
+       console.log("Message sent: " + response.message);
+   }
+});
 });
 
 
