@@ -47,10 +47,10 @@ var create_payment_json = {
 		"payment_method": "paypal"
 	},
 	"redirect_urls":{
-		"return_url": "http://localhost:8888/checkout/thankyou",
-		"cancel_url": "http://localhost:8888/checkout/error"
-		//"return_url": "https://store63.ierg4210.org/checkout/thankyou",
-		//"cancel_url": "https://store63.ierg4210.org/checkout/error"
+		//"return_url": "http://localhost:8888/checkout/thankyou",
+		//"cancel_url": "http://localhost:8888/checkout/error"
+		"return_url": "https://store63.ierg4210.org/checkout/thankyou",
+		"cancel_url": "https://store63.ierg4210.org/checkout/error"
 	},
 	"transactions": [{
 		"item_list": {
@@ -75,8 +75,8 @@ app.use(expressValidator());
 app.use(cookieParser()); 
 app.use(session({ 
  store: new RedisStore({ 
-// 'host':'ierg4210.oxmzfj.0001.apse1.cache.amazonaws.com', 'port':6379}),
- 'host':'127.0.0.1', 'port':6379}),
+ 'host':'ierg4210.oxmzfj.0001.apse1.cache.amazonaws.com', 'port':6379}),
+// 'host':'127.0.0.1', 'port':6379}),
  name: 'account',
  secret: '7mA2dHdjNWJqNEteutDAX9Ud', // by random.org
  resave: false, 
@@ -97,9 +97,7 @@ return hmac.digest('base64');
 }
 //console.log(hmacPassword(бе123456'));
 
-app.use(csrf({ cookie: {httpOnly: true
-//, secure: true 
-} }));
+app.use(csrf({ cookie: {httpOnly: true, secure: true } }));
 // error handler 
 app.use(function (err, req, res, next) {
   if (err.code !== 'EBADCSRFTOKEN') return next(err)
@@ -636,8 +634,8 @@ app.post('/account/api/forgetPW',function(req,res){
 						   from: "store63ierg4210@yahoo.com.hk", // sender address
 						   to: req.body.username, // comma separated list of receivers
 						   subject: "Forget Password of Store63", // Subject line
-						   html: '<p>Your new password is "'+rand_pw+'" </p><p>Please click link below to continuous your step.</p><a href=http://localhost:8888/account/forgetPW/continuous?token='+token+'>http://localhost:8888/account/forgetPW/continuous?token='+token+' </a>' 
-						   //html: '<p>Your new password is "'+rand_pw+'" </p><p>Please click link below to continuous your step.</p><a href=https://store63.ierg4210.org/account/forgetPW/continuous?token='+token+'>https://store63.ierg4210.org/account/forgetPW/continuous?token='+token+' </a>' 
+						   //html: '<p>Your new password is "'+rand_pw+'" </p><p>Please click link below to continuous your step.</p><a href=http://localhost:8888/account/forgetPW/continuous?token='+token+'>http://localhost:8888/account/forgetPW/continuous?token='+token+' </a>' 
+						   html: '<p>Your new password is "'+rand_pw+'" </p><p>Please click link below to continuous your step.</p><a href=https://store63.ierg4210.org/account/forgetPW/continuous?token='+token+'>https://store63.ierg4210.org/account/forgetPW/continuous?token='+token+' </a>' 
 						}, function(error, response){
 						   if(error){
 							   console.log(error);
@@ -809,8 +807,8 @@ app.post('/account/api/create',function(req,res){
 							   from: "store63ierg4210@yahoo.com.hk", // sender address
 							   to: username, // comma separated list of receivers
 							   subject: "Sing up of Store63", // Subject line
-							   html: '<p>Your new account is created </p><p>Please click link below to activate your account.</p><a href=http://localhost:8888/account/create/continuous?token='+token+'>http://localhost:8888/account/create/continuous?token='+token+' </a>' 
-							   //html: '<p>Your new account is created </p><p>Please click link below to activate your account.</p><a href=https://store63.ierg4210.org/account/create/continuous?token='+token+'>https://store63.ierg4210.org/account/create/continuous?token='+token+' </a>' 
+							   //html: '<p>Your new account is created </p><p>Please click link below to activate your account.</p><a href=http://localhost:8888/account/create/continuous?token='+token+'>http://localhost:8888/account/create/continuous?token='+token+' </a>' 
+							   html: '<p>Your new account is created </p><p>Please click link below to activate your account.</p><a href=https://store63.ierg4210.org/account/create/continuous?token='+token+'>https://store63.ierg4210.org/account/create/continuous?token='+token+' </a>' 
 							}, function(error, response){
 							   if(error){
 								   console.log(error);
